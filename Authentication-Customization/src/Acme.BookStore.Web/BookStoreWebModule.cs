@@ -107,6 +107,14 @@ namespace Acme.BookStore.Web
 
         private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
         {
+            //context.Services.AddAuthentication()
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.Authority = configuration["AuthServer:Authority"];
+            //        options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+            //        options.Audience = "BookStore";
+            //    });
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             // Mapping for GetExternalLoginInfoAsync
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Add("sub", ClaimTypes.NameIdentifier);
@@ -115,15 +123,16 @@ namespace Acme.BookStore.Web
                 {
                     options.Authority = configuration["AuthServer:Authority"];
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = "Acme.BookStore";
+                    //options.ApiName = "Acme.BookStore";
+                    options.ApiName = "BookStore";
                 });
-            
-            context.Services.AddMicrosoftIdentityWebAppAuthentication(
-                configuration: configuration,
-                configSectionName: "AzureAd",
-                openIdConnectScheme:"AzureAD",
-                cookieScheme:null);
-            
+
+            //context.Services.AddMicrosoftIdentityWebAppAuthentication(
+            //    configuration: configuration,
+            //    configSectionName: "AzureAd",
+            //    openIdConnectScheme:"AzureAD",
+            //    cookieScheme:null);
+
             //Use standart openid connection
             // .AddOpenIdConnect("AzureOpenId", "AzureAD", options =>
             //  {
@@ -214,7 +223,7 @@ namespace Acme.BookStore.Web
             services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo {Title = "BookStore API", Version = "v1"});
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "BookStore API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                     options.CustomSchemaIds(type => type.FullName);
                 }

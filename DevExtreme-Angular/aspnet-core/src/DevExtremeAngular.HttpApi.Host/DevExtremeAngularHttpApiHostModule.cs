@@ -23,6 +23,8 @@ using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 
 namespace DevExtremeAngular
 {
@@ -40,7 +42,6 @@ namespace DevExtremeAngular
     public class DevExtremeAngularHttpApiHostModule : AbpModule
     {
         private const string DefaultCorsPolicyName = "Default";
-
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var configuration = context.Services.GetConfiguration();
@@ -107,7 +108,7 @@ namespace DevExtremeAngular
             context.Services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo {Title = "DevExtremeAngular API", Version = "v1"});
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "DevExtremeAngular API", Version = "v1" });
                     options.DocInclusionPredicate((docName, description) => true);
                 });
         }
@@ -134,17 +135,20 @@ namespace DevExtremeAngular
                 options.AddPolicy(DefaultCorsPolicyName, builder =>
                 {
                     builder
-                        .WithOrigins(
+                       /* .WithOrigins(
                             configuration["App:CorsOrigins"]
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray()
-                        )
+                        )*/
+                       .AllowAnyOrigin()
                         .WithAbpExposedHeaders()
-                        .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        
+                       // .SetIsOriginAllowedToAllowWildcardSubdomains()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials();
+                      //  .AllowCredentials()
+                      ;
                 });
             });
         }

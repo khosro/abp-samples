@@ -10,16 +10,16 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44341',
+    issuer: 'https://localhost:5001',
     redirectUri: baseUrl,
-    clientId: 'DevExtremeAngular_App',
+    clientId: 'Idea_App',
     responseType: 'code',
-    scope: 'offline_access DevExtremeAngular',
+    scope: 'openid offline_access Idea',
   },
   apis: {
     default: {
-      url: 'https://localhost:44341',
-      rootNamespace: 'DevExtremeAngular',
+      url: 'https://localhost:5001',
+      rootNamespace: 'Idea',
     },
   },
 } as Config.Environment;

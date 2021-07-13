@@ -60,10 +60,4 @@
     <PackageReference Include="Volo.Abp.FeatureManagement.Web" Version="4.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Pages\Account\Login.cshtml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
