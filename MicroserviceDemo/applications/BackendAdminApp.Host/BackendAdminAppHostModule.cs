@@ -25,26 +25,86 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.Web;
 using Volo.Abp.UI.Navigation;
 using Volo.Blogging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
+
+using ProductManagement;
+using StackExchange.Redis;
+using Microsoft.OpenApi.Models;
+using MsDemo.Shared;
+using Swashbuckle.AspNetCore.Swagger;
+using Volo.Abp;
+using Volo.Abp.AspNetCore.MultiTenancy;
+using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
+using Volo.Abp.Autofac;
+using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.SqlServer;
+using Volo.Abp.FeatureManagement;
+using Volo.Abp.FeatureManagement.EntityFrameworkCore;
+using Volo.Abp.Http.Client.IdentityModel.Web;
+using Volo.Abp.Identity;
+using Volo.Abp.Modularity;
+using Volo.Abp.MultiTenancy;
+using Volo.Abp.PermissionManagement;
+using Volo.Abp.PermissionManagement.EntityFrameworkCore;
+using Volo.Abp.PermissionManagement.HttpApi;
+using Volo.Abp.PermissionManagement.Identity;
+using Volo.Abp.PermissionManagement.IdentityServer;
+using Volo.Abp.Security.Claims;
+using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.TenantManagement;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Blogging;
 
 namespace BackendAdminApp.Host
 {
     [DependsOn(
         typeof(AbpAutofacModule),
-        typeof(AbpAspNetCoreMvcClientModule),
-        typeof(AbpAspNetCoreAuthenticationOAuthModule),
-        typeof(AbpHttpClientIdentityModelWebModule),
-        typeof(AbpIdentityHttpApiClientModule),
-        typeof(AbpIdentityWebModule),
-        typeof(AbpTenantManagementHttpApiClientModule),
-        typeof(AbpTenantManagementWebModule),
-        typeof(BloggingApplicationContractsModule),
-        typeof(AbpPermissionManagementHttpApiClientModule),
-        typeof(ProductManagementHttpApiClientModule),
-        typeof(ProductManagementWebModule),
-        typeof(AbpAspNetCoreMvcUiBasicThemeModule),
-        typeof(AbpFeatureManagementHttpApiClientModule)
-        )]
-        public class BackendAdminAppHostModule : AbpModule
+        
+        
+    //    typeof(AbpEntityFrameworkCoreSqlServerModule),
+
+         typeof(AbpPermissionManagementEntityFrameworkCoreModule)//Autofac.Core.DependencyResolutionException: None of the constructors found with 'Volo.Abp.Autofac.AbpAutofacConstructorFinder' on type 'Volo.Abp.PermissionManagement.PermissionStore' can be invoked with the available services and parameters:
+        , typeof(AbpPermissionManagementApplicationModule)//Autofac.Core.DependencyResolutionException: An exception was thrown while activating Volo.Abp.PermissionManagement.Web.Pages.AbpPermissionManagement.PermissionManagementModal. --->Autofac.Core.DependencyResolutionException: None of the constructors found with 'Volo.Abp.Autofac.AbpAutofacConstructorFinder' on type 'Volo.Abp.PermissionManagement.Web.Pages.AbpPermissionManagement.Permis
+        , typeof(AbpPermissionManagementDomainIdentityModule)// Volo.Abp.AbpException: No policy defined to get/set permissions for the provider 'U'. Use PermissionManagementOptions to map the policy.
+      // , typeof(AbpPermissionManagementDomainIdentityServerModule)// does not need
+      //,  typeof(AbpPermissionManagementHttpApiModule)// does not need
+
+      , typeof(AbpIdentityHttpApiClientModule)//An internal error occurred during your request! ---  None of the constructors found with 'Volo.Abp.Autofac.AbpAutofacConstructorFinder' on type 'Volo.Abp.Identity.IdentityUserController' can be invoked with the available services and parameters:
+      , typeof(AbpHttpClientIdentityModelWebModule)//Authorization failed! Given policy has not granted.
+      , typeof(AbpIdentityWebModule)// access to /Identity/Users and ...
+                                    //  , typeof(AbpIdentityHttpApiModule)// does not need
+
+
+
+        //,typeof(AbpTenantManagementApplicationContractsModule),
+        //typeof(AbpTenantManagementHttpApiModule),
+        //typeof(AbpTenantManagementHttpApiClientModule),
+        //typeof(AbpTenantManagementEntityFrameworkCoreModule),
+
+
+        , typeof(AbpFeatureManagementEntityFrameworkCoreModule),
+        typeof(AbpFeatureManagementApplicationModule),
+        typeof(AbpFeatureManagementHttpApiModule)
+        , typeof(AbpFeatureManagementHttpApiClientModule)
+
+        //typeof(AbpSettingManagementEntityFrameworkCoreModule)
+
+
+        , typeof(AbpAspNetCoreMvcUiBasicThemeModule)
+     //   , typeof(AbpAspNetCoreMvcUiMultiTenancyModule)
+
+       //, typeof(BloggingApplicationContractsModule)
+       // , typeof(ProductManagementHttpApiModule)
+
+
+      )]
+    public class BackendAdminAppHostModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
@@ -90,8 +150,14 @@ namespace BackendAdminApp.Host
                     options.Scope.Add("IdentityService");
                     options.Scope.Add("ProductService");
                     options.Scope.Add("TenantManagementService");
-                    
+
                 });
+
+            Configure<AbpDbContextOptions>(options =>
+            {
+                options.UseSqlServer();
+            });
+
 
             context.Services.AddSwaggerGen(
                 options =>
@@ -118,7 +184,7 @@ namespace BackendAdminApp.Host
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
-            
+
             if (MsDemoConsts.IsMultiTenancyEnabled)
             {
                 app.UseMultiTenancy();

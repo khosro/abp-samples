@@ -1,0 +1,25 @@
+
+
+
+https://github.com/rebus-org/Rebus/wiki/Automatic-retries-and-error-handling
+
+
+https://github.com/rebus-org/Rebus/wiki/Fail-fast-on-certain-exception-types
+
+https://github.com/rebus-org/Rebus/wiki/Fail-fast-on-certain-exception-types
+
+
+https://github.com/rebus-org/Rebus/wiki/Transactions
+
+
+
+https://youtu.be/zjDSJ5ByPxE?t=9526    IPublicProductAppService
+
+
+https://github.com/abpframework/eShopOnAbp/ ChangePrice, ChangeQty (Down and Up) -> Basket refresh
+
+
+publicweb > abp generate-proxy 
+
+
+EShopOnAbp.BasketService.HttpApi.Client > 

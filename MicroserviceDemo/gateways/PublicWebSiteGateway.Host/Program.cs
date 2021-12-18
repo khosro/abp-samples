@@ -25,7 +25,7 @@ namespace PublicWebSiteGateway.Host
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .Enrich.WithProperty("Application", "PublicWebSiteGateway")
-                .Enrich.FromLogContext()
+                .Enrich.FromLogContext().WriteTo.Console()
                 .WriteTo.File("Logs/logs.txt")
                 .WriteTo.Elasticsearch(
                     new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))

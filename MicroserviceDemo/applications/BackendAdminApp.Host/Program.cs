@@ -27,6 +27,7 @@ namespace BackendAdminApp.Host
                 .Enrich.WithProperty("Application", "BackendAdminApp")
                 .Enrich.FromLogContext()
                 .WriteTo.File("Logs/logs.txt")
+                .WriteTo.Console()
                 .WriteTo.Elasticsearch(
                     new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))
                     {

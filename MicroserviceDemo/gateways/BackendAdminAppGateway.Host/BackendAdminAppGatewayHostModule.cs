@@ -39,25 +39,25 @@ namespace BackendAdminAppGateway.Host
 {
     [DependsOn(
         typeof(AbpAutofacModule),
-        typeof(AbpIdentityHttpApiModule),
-        typeof(AbpIdentityHttpApiClientModule),
-        typeof(ProductManagementHttpApiModule),
-        typeof(AbpEntityFrameworkCoreSqlServerModule),
-        typeof(AbpPermissionManagementEntityFrameworkCoreModule),
-        typeof(AbpPermissionManagementApplicationModule),
-        typeof(AbpPermissionManagementHttpApiModule),
-        typeof(AbpSettingManagementEntityFrameworkCoreModule),
-        typeof(BloggingApplicationContractsModule),
-        typeof(AbpPermissionManagementDomainIdentityModule),
-        typeof(AbpPermissionManagementDomainIdentityServerModule),
-        typeof(AbpHttpClientIdentityModelWebModule),
-        typeof(AbpTenantManagementApplicationContractsModule),
-        typeof(AbpTenantManagementHttpApiModule),
-        typeof(AbpTenantManagementHttpApiClientModule),
-        typeof(AbpTenantManagementEntityFrameworkCoreModule),
-        typeof(AbpFeatureManagementEntityFrameworkCoreModule),
-        typeof(AbpFeatureManagementApplicationModule),
-        typeof(AbpFeatureManagementHttpApiModule),
+        //typeof(AbpIdentityHttpApiModule),
+        //typeof(AbpIdentityHttpApiClientModule),
+        //typeof(ProductManagementHttpApiModule),
+        //typeof(AbpEntityFrameworkCoreSqlServerModule),
+        //typeof(AbpPermissionManagementEntityFrameworkCoreModule),
+        //typeof(AbpPermissionManagementApplicationModule),
+        //typeof(AbpPermissionManagementHttpApiModule),
+        //typeof(AbpSettingManagementEntityFrameworkCoreModule),
+        //typeof(BloggingApplicationContractsModule),
+        //typeof(AbpPermissionManagementDomainIdentityModule),
+        //typeof(AbpPermissionManagementDomainIdentityServerModule),
+        //typeof(AbpHttpClientIdentityModelWebModule),
+        //typeof(AbpTenantManagementApplicationContractsModule),
+        //typeof(AbpTenantManagementHttpApiModule),
+        //typeof(AbpTenantManagementHttpApiClientModule),
+        //typeof(AbpTenantManagementEntityFrameworkCoreModule),
+        //typeof(AbpFeatureManagementEntityFrameworkCoreModule),
+        //typeof(AbpFeatureManagementApplicationModule),
+        //typeof(AbpFeatureManagementHttpApiModule),
         typeof(AbpAspNetCoreMvcUiMultiTenancyModule)
     )]
     public class BackendAdminAppGatewayHostModule : AbpModule
@@ -66,18 +66,18 @@ namespace BackendAdminAppGateway.Host
         {
             var configuration = context.Services.GetConfiguration();
 
-            Configure<AbpMultiTenancyOptions>(options =>
-            {
-                options.IsEnabled = MsDemoConsts.IsMultiTenancyEnabled;
-            });
+            //Configure<AbpMultiTenancyOptions>(options =>
+            //{
+            //    options.IsEnabled = MsDemoConsts.IsMultiTenancyEnabled;
+            //});
 
-            context.Services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = configuration["AuthServer:Authority"];
-                    options.ApiName = configuration["AuthServer:ApiName"];
-                    options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                });
+            //context.Services.AddAuthentication("Bearer")
+            //    .AddIdentityServerAuthentication(options =>
+            //    {
+            //        options.Authority = configuration["AuthServer:Authority"];
+            //        options.ApiName = configuration["AuthServer:ApiName"];
+            //        options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+            //    });
 
             context.Services.AddSwaggerGen(options =>
             {
@@ -88,19 +88,19 @@ namespace BackendAdminAppGateway.Host
 
             context.Services.AddOcelot(context.Services.GetConfiguration());
 
-            Configure<AbpDbContextOptions>(options =>
-            {
-                options.UseSqlServer();
-            });
+            //Configure<AbpDbContextOptions>(options =>
+            //{
+            //    options.UseSqlServer();
+            //});
 
-            context.Services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = configuration["Redis:Configuration"];
-            });
+            //context.Services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = configuration["Redis:Configuration"];
+            //});
 
-            var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
-            context.Services.AddDataProtection()
-                .PersistKeysToStackExchangeRedis(redis, "MsDemo-DataProtection-Keys");
+            //var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]);
+            //context.Services.AddDataProtection()
+            //    .PersistKeysToStackExchangeRedis(redis, "MsDemo-DataProtection-Keys");
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -109,14 +109,17 @@ namespace BackendAdminAppGateway.Host
 
             app.UseCorrelationId();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAbpClaimsMap();
+            
+          //  app.UseRouting();
+            
+            //app.UseAuthentication();
+          
+            //app.UseAbpClaimsMap();
 
-            if (MsDemoConsts.IsMultiTenancyEnabled)
-            {
-                app.UseMultiTenancy();
-            }
+            //if (MsDemoConsts.IsMultiTenancyEnabled)
+            //{
+            //    app.UseMultiTenancy();
+            //}
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {

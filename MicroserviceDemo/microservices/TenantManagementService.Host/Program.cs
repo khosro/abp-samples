@@ -26,7 +26,7 @@ namespace TenantManagementService.Host
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .Enrich.WithProperty("Application", "TenantManagementService")
                 .Enrich.FromLogContext()
-                .WriteTo.File("Logs/logs.txt")
+                .WriteTo.File("Logs/logs.txt").WriteTo.Console()
                 .WriteTo.Elasticsearch(
                     new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))
                     {

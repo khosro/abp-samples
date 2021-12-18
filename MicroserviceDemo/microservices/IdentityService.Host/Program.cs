@@ -25,7 +25,7 @@ namespace IdentityService.Host
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                 .Enrich.WithProperty("Application", "IdentityService")
-                .Enrich.FromLogContext()
+                .Enrich.FromLogContext().WriteTo.Console()
                 .WriteTo.File("Logs/logs.txt")
                 .WriteTo.Elasticsearch(
                     new ElasticsearchSinkOptions(new Uri(configuration["ElasticSearch:Url"]))

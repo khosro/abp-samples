@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-
 namespace ConsoleClientDemo
 {
     internal class Program
@@ -14,7 +13,7 @@ namespace ConsoleClientDemo
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.File("Logs/logs.txt")
+                .WriteTo.File("Logs/logs.txt").WriteTo.Console()
                 .CreateLogger();
 
             Log.Information("Starting ConsoleClientDemo...");

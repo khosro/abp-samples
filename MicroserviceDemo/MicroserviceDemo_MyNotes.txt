@@ -1,0 +1,186 @@
+
+NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE_NOTICE : 
+
+Remove authentication and unnecessary module form BackendAdminAppGatewayHostModule and add those module to BackendAdminAppHostModule.
+
+
+---------
+
+AddAutoMapperObjectMapper
+
+database.MappedConnections.Add("AbpFeatureManagement");
+
+
+
+
+
+AuthServer.Host    https://localhost:44399 ->  https://localhost:44398 -> 44395
+
+IdentityService.Host    https://localhost:44368
+
+TenantManagementService.Host  https://localhost:44336
+
+BloggingService.Host  https://localhost:44357
+
+ProductService.Host  https://localhost:44344
+
+InternalGateway.Host    https://localhost:44329
+
+BackendAdminAppGateway.Host   https://localhost:44315
+
+PublicWebSiteGateway.Host   https://localhost:44397
+
+BackendAdminApp.Host   https://localhost:44354
+
+PublicWebSite.Host  https://localhost:44335
+
+
+"RemoteServices": {
+  "Default": {
+    "BaseUrl": "http://localhost:65115/"
+  }
+}
+
+ocelet
+
+Passing the Access Token : AbpHttpClientIdentityModelModule 
+
+
+HTTP Clients
+For that purpose, BackendAdminAppHostModule class declares dependencies for AbpIdentityHttpApiClientModule and ProductManagementHttpApiClientModule.
+
+
+ "UseCurrentAccessToken": "false"
+
+
+AbpIdentityHttpApiClientModule -> IIdentityUserAppService
+
+
+GlobalConfiguration -> https://ocelot.readthedocs.io/en/latest/features/configuration.html
+
+
+app.MapWhen(ctx => ctx.Request.Path.ToString().StartsWith("/api/abp/") || 
+                   ctx.Request.Path.ToString().StartsWith("/Abp/"),
+    app2 =>
+    {
+        app2.UseConfiguredEndpoints();
+    });
+
+
+--------
+
+  "ConnectionStrings": {
+    "Default": "Server=localhost,1433; Database=MsDemo_Identity; User=sa; Password=yourStrong(!)Password",
+    "Blogging": "mongodb://localhost:27017/MsDemo_Blogging"
+  },
+
+---------------
+
+"IdentityClients": {
+    "Default": {
+      "GrantType": "client_credentials",
+      "ClientId": "console-client-demo",
+      "ClientSecret": "1q2w3e*",
+      "Authority": "https://localhost:44399",
+    "RequireHttpsMetadata": "true",
+      "Scope": "InternalGateway IdentityService ProductService TenantManagementService"
+    }
+  }
+
+"IdentityClients": {
+  "Default": {
+    "GrantType": "client_credentials",
+    "ClientId": "blogging-service-client",
+    "ClientSecret": "1q2w3e*",
+    "Authority": "http://localhost:64999",
+    "Scope": "InternalGateway IdentityService"
+  }
+}
+
+AbpPermissionGrants 
+ 
+  await CreateClientAsync(
+                "console-client-demo",
+                new[] { "BloggingService", "IdentityService", "InternalGateway", "ProductService", "TenantManagementService" },
+                new[] { "client_credentials", "password" },
+                commonSecret,
+                permissions: new[] { IdentityPermissions.Users.Default, TenantManagementPermissions.Tenants.Default, "ProductManagement.Product" }
+            );
+			
+			
+			
+Removing the following  
+
+context.Services.AddAuthentication("Bearer")
+    .AddIdentityServerAuthentication(options =>
+    {
+        options.Authority = configuration["AuthServer:Authority"];
+        options.ApiName = configuration["AuthServer:ApiName"];
+        options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+    });			
+
+causes error :
+
+Could not find IdentityClientConfiguration for AbpMvcClient. Either define a configuration for AbpMvcClient or set a default configuration.
+
+ Authorization failed. These requirements were not met:
+PermissionRequirement: AbpIdentity.Users			
+			
+			
+			
+ 
+--------------
+
+Product module
+
+ProductManagement.Web
+
+In this solution, Web layer runs in the Backend Admin Application while API layer is hosted by the Product microservice.
+
+
+
+
+
+----
+
+docker run --name postgres_1 -p 5432:5432 -e POSTGRES_PASSWORD=myPassw0rd -d postgres
+
+docker run --name mongo_1   -p 27017:27017 -d mongo:latest
+
+docker run -d -p 6379:6379 --name redis_1 redis 
+
+
+
+docker run -d --name elasticsearch_7_14_2   -p 9200:9200 -p 9300:9300   -e "discovery.type=single-node" elasticsearch:7.14.2
+
+
+
+docker run -d --name kibana -p 5601:5601 kibana:7.14.2
+
+
+----------
+
+https://github.com/abpframework/eShopOnAbp
+
+
+
+
+AuthServer   https://localhost:44330
+
+WebGateway https://localhost:44372
+
+WebPublicGateway  https://localhost:44373
+
+PublicWeb https://localhost:44335/
+
+administration https://localhost:44353
+
+Basket  https://localhost:44355
+ 
+Catalog  https://localhost:44354
+
+IdentityService https://localhost:44351
+
+Payment https://localhost:44357
+
+Ordering  https://localhost:44356
